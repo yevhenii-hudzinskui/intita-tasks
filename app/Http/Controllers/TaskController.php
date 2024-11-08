@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -30,15 +31,9 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TaskRequest $request)
     {
-        $user = $request->user();
-
-        $task = new Task;
-        $task->name = $request->name;
-        $task->description = $request->description;
-        $task->user_id = $user->getKey();
-        $task->save();
+        $task = $request->user()->tasks()->create($request->validated());
 
         return redirect()->route('tasks.show', $task);
     }
@@ -46,12 +41,11 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Task $task)
     {
-        $task = Task::find($id);
-        $user = User::find($task->user_id);
+        $task->load('user');
 
-        return view('task.show', compact('task', 'user'));
+        return view('task.show', compact('task'));
     }
 
     /**
