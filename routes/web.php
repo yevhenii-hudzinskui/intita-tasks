@@ -1,11 +1,15 @@
 <?php
 
+use App\Http\Controllers\AllTasks;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('all-tasks', AllTasks::class)
+    ->name('all-tasks');
 
 Route::middleware([
     'auth:sanctum',

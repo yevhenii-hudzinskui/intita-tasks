@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TaskRequest;
 use App\Models\Task;
-use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -14,7 +14,10 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::with('user')->get();
+        $tasks = Auth::user()
+            ->tasks()
+            ->with('user')
+            ->get();
 
         return view('task.index')
             ->with('tasks', $tasks);
