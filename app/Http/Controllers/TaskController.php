@@ -4,20 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TaskRequest;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Gate;
 
 class TaskController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = Auth::user()
-            ->tasks()
-            ->with('user')
-            ->get();
+        $tasks = Cache::remember(md5($request->fullUrl()), now()->addHours(2), function () {
+            return Auth::user()
+                ->tasks()
+                ->with('user')
+                ->paginate();
+        });
 
         return view('task.index')
             ->with('tasks', $tasks);
@@ -28,6 +33,8 @@ class TaskController extends Controller
      */
     public function create()
     {
+        abort_if(Gate::denies('task_create'), 403);
+
         return view('task.create');
     }
 

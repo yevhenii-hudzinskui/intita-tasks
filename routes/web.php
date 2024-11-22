@@ -18,7 +18,9 @@ Route::middleware([
 ])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
-    })->name('dashboard');
+    })
+        ->can('view-dashboard')
+        ->name('dashboard');
 
     Route::resource('tasks', TaskController::class);
 });
