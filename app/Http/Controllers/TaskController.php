@@ -33,8 +33,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        abort_if(Gate::denies('task_create'), 403);
-
+//        abort_if(Gate::denies('task_create'), 403);
         return view('task.create');
     }
 
@@ -53,6 +52,8 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
+        Gate::authorize('view', $task);
+
         $task->load('user');
 
         return view('task.show', compact('task'));
