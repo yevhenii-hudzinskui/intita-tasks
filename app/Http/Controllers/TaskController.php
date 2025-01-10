@@ -6,6 +6,7 @@ use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
@@ -33,7 +34,6 @@ class TaskController extends Controller
      */
     public function create()
     {
-//        abort_if(Gate::denies('task_create'), 403);
         return view('task.create');
     }
 
